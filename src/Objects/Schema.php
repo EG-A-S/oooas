@@ -220,7 +220,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function array(string $objectId = null): self
+    public static function array(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_ARRAY);
     }
@@ -229,7 +229,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function boolean(string $objectId = null): self
+    public static function boolean(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_BOOLEAN);
     }
@@ -238,7 +238,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function integer(string $objectId = null): self
+    public static function integer(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_INTEGER);
     }
@@ -247,7 +247,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function number(string $objectId = null): self
+    public static function number(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_NUMBER);
     }
@@ -256,7 +256,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function object(string $objectId = null): self
+    public static function object(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_OBJECT);
     }
@@ -265,7 +265,7 @@ class Schema extends BaseObject implements SchemaContract
      * @param string|null $objectId
      * @return static
      */
-    public static function string(string $objectId = null): self
+    public static function string(string|null $objectId = null): self
     {
         return static::create($objectId)->type(static::TYPE_STRING);
     }
@@ -571,13 +571,13 @@ class Schema extends BaseObject implements SchemaContract
             throw new InvalidArgumentException(
                 sprintf(
                     'The required must either be an instance of [%s] or a string.',
-                    Schema::class
+                    self::class
                 )
             );
         }
+        unset($require);
 
         $instance = clone $this;
-
         $instance->required = $required ?: null;
 
         return $instance;
