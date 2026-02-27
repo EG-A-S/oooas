@@ -43,23 +43,23 @@ use GoldSpecDigital\ObjectOrientedOAS\Utilities\Arr;
  */
 class Schema extends BaseObject implements SchemaContract
 {
-    const TYPE_ARRAY = 'array';
-    const TYPE_BOOLEAN = 'boolean';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_NUMBER = 'number';
-    const TYPE_OBJECT = 'object';
-    const TYPE_STRING = 'string';
+    public const string TYPE_ARRAY = 'array';
+    public const string TYPE_BOOLEAN = 'boolean';
+    public const string TYPE_INTEGER = 'integer';
+    public const string TYPE_NUMBER = 'number';
+    public const string TYPE_OBJECT = 'object';
+    public const string TYPE_STRING = 'string';
 
-    const FORMAT_INT32 = 'int32';
-    const FORMAT_INT64 = 'int64';
-    const FORMAT_FLOAT = 'float';
-    const FORMAT_DOUBLE = 'double';
-    const FORMAT_BYTE = 'byte';
-    const FORMAT_BINARY = 'binary';
-    const FORMAT_DATE = 'date';
-    const FORMAT_DATE_TIME = 'date-time';
-    const FORMAT_PASSWORD = 'password';
-    const FORMAT_UUID = 'uuid';
+    public const string FORMAT_INT32 = 'int32';
+    public const string FORMAT_INT64 = 'int64';
+    public const string FORMAT_FLOAT = 'float';
+    public const string FORMAT_DOUBLE = 'double';
+    public const string FORMAT_BYTE = 'byte';
+    public const string FORMAT_BINARY = 'binary';
+    public const string FORMAT_DATE = 'date';
+    public const string FORMAT_DATE_TIME = 'date-time';
+    public const string FORMAT_PASSWORD = 'password';
+    public const string FORMAT_UUID = 'uuid';
 
     /**
      * @var string|null
@@ -165,6 +165,10 @@ class Schema extends BaseObject implements SchemaContract
      * @var \GoldSpecDigital\ObjectOrientedOAS\Objects\Schema|null
      */
     protected $additionalProperties;
+
+    protected ?array $allOf = null;
+    protected ?array $anyOf = null;
+    protected ?array $oneOf = null;
 
     /**
      * @var int|null
@@ -554,12 +558,12 @@ class Schema extends BaseObject implements SchemaContract
      * @throws \GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException
      * @return static
      */
-    public function required(...$required): self
+    public function required(...$required): static
     {
         // Only allow Schema instances and strings.
         foreach ($required as &$require) {
             // If a Schema instance was passed in then extract it's name string.
-            if ($require instanceof Schema) {
+            if ($require instanceof self) {
                 $require = $require->objectId;
                 continue;
             }
@@ -593,6 +597,27 @@ class Schema extends BaseObject implements SchemaContract
 
         $instance->properties = $properties ?: null;
 
+        return $instance;
+    }
+
+    public function allOf(SchemaContract ...$schemas): static
+    {
+        $instance = clone $this;
+        $instance->allOf = $schemas;
+        return $instance;
+    }
+
+    public function anyOf(SchemaContract ...$schemas): static
+    {
+        $instance = clone $this;
+        $instance->anyOf = $schemas;
+        return $instance;
+    }
+
+    public function oneOf(SchemaContract ...$schemas): static
+    {
+        $instance = clone $this;
+        $instance->oneOf = $schemas;
         return $instance;
     }
 
@@ -781,6 +806,9 @@ class Schema extends BaseObject implements SchemaContract
             'externalDocs' => $this->externalDocs,
             'example' => $this->example,
             'deprecated' => $this->deprecated,
+            'allOf' => $this->allOf,
+            'oneOf' => $this->oneOf,
+            'anyOf' => $this->anyOf,
         ]);
     }
 }

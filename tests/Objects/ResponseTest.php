@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GoldSpecDigital\ObjectOrientedOAS\Tests\Objects;
 
+use GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Example;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Header;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Link;
@@ -15,7 +16,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Tests\TestCase;
 class ResponseTest extends TestCase
 {
     /** @test */
-    public function create_with_all_parameters_works()
+    public function create_with_all_parameters_works(): void
     {
         $header = Header::create('HeaderName')
             ->description('Lorem ipsum')
@@ -80,7 +81,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_ok_method_works()
+    public function create_with_ok_method_works(): void
     {
         $response = Response::ok();
 
@@ -89,7 +90,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_created_method_works()
+    public function create_with_created_method_works(): void
     {
         $response = Response::created();
 
@@ -98,7 +99,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_movedPermanently_method_works()
+    public function create_with_movedPermanently_method_works(): void
     {
         $response = Response::movedPermanently();
 
@@ -107,7 +108,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_movedTemporarily_method_works()
+    public function create_with_movedTemporarily_method_works(): void
     {
         $response = Response::movedTemporarily();
 
@@ -116,7 +117,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_badRequest_method_works()
+    public function create_with_badRequest_method_works(): void
     {
         $response = Response::badRequest();
 
@@ -125,7 +126,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_unauthorized_method_works()
+    public function create_with_unauthorized_method_works(): void
     {
         $response = Response::unauthorized();
 
@@ -134,7 +135,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_notFound_method_works()
+    public function create_with_notFound_method_works(): void
     {
         $response = Response::notFound();
 
@@ -143,7 +144,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_unprocessableEntity_method_works()
+    public function create_with_unprocessableEntity_method_works(): void
     {
         $response = Response::unprocessableEntity();
 
@@ -152,7 +153,7 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_tooManyRequests_method_works()
+    public function create_with_tooManyRequests_method_works(): void
     {
         $response = Response::tooManyRequests();
 
@@ -161,11 +162,30 @@ class ResponseTest extends TestCase
     }
 
     /** @test */
-    public function create_with_internalServerError_method_works()
+    public function create_with_internalServerError_method_works(): void
     {
         $response = Response::internalServerError();
 
         $this->assertEquals(500, $response->statusCode);
         $this->assertEquals('Internal Server Error', $response->description);
+    }
+
+    /** @test */
+    public function create_with_wildcard_status_works(): void
+    {
+        $response = Response::create()
+            ->statusCode('2XX')
+            ->description('OK');
+
+        $this->assertSame('2XX', $response->statusCode);
+    }
+
+    /** @test */
+    public function create_with_bad_status_string_fails(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        Response::create()
+            ->statusCode('kjell')
+            ->description('OK');
     }
 }
